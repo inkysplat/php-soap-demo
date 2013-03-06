@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<definitions 
+  name="HelloWorld" 
+  targetNamespace="urn:HelloWorld" 
+  xmlns:tns="urn:HelloWorld" 
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" 
+  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+  xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <xsd:schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:Hello">
+      <xsd:element name="getName" type="xsd:string" />
+	     <xsd:element name="HelloResponse" type="xsd:string" />	 	  
+       <xsd:element name="blank" type="xsd:null" />
+  	</xsd:schema>			
+  </types>
+  
+  <message name="sayHelloRequest">
+
+  </message>
+  
+  <message name="sayHelloResponse">
+    <part name="return" type="tns:HelloResponse" />
+  </message>  
+
+  <message name="setNameRequest">
+    <part name="yourName" type="tns:getName"/>
+  </message>
+
+  <message name="setNameResponse">
+    <part name="return" type="tns:blank"/>
+  </message>
+  
+  <portType name="HelloPort">
+    <operation name="setName">
+      <input message="tns:setNameRequest" />
+      <output message="tns:setNameResponse" />
+    </operation>
+    <operation name="sayHello">
+  	  <input message="tns:sayHelloRequest" />
+  	  <output message="tns:sayHelloResponse" />
+	</operation>
+  </portType>
+  
+  <binding name="HelloBinding" type="tns:HelloPort">
+    <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http" />
+	  <operation name="sayHello">
+	    <soap:operation soapAction="urn:HelloAction" />
+		<input>
+		  <soap:body use="encoded" namespace="urn:Hello" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />		  
+		</input>
+		<output>
+		  <soap:body use="encoded" namespace="urn:Hello" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />		  
+		</output>
+	  </operation>
+    <operation name="setName">
+      <soap:operation soapAction="urn:HelloAction" />
+        <input>
+      <soap:body use="encoded" namespace="urn:Hello" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />     
+    </input>
+    </operation>
+  </binding>
+  
+  <service name="HelloService">
+    <port name="HelloPort" binding="tns:HelloBinding">
+	  <soap:address location="http://dev.soap-server/index.php" />
+	</port>
+  </service>
+    
+</definitions>
